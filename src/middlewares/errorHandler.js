@@ -1,7 +1,8 @@
 export function errorHandler(err, req, res, next) {
-  console.error('❌ Error capturado:', err.name);  // Muestra el nombre del error en consola
+  // Usa el logger para registrar el error real
+  req.logger?.error(`❌ Error capturado: ${err.name} - ${err.message}`);
 
-  res.status(err.code || 500).json({               // Devuelve una respuesta JSON al frontend
+  res.status(err.code || 500).json({
     status: 'error',
     message: err.message || 'Error inesperado',
     cause: err.cause || 'Desconocido'
