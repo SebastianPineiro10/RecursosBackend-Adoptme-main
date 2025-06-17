@@ -13,6 +13,7 @@ import mocksRouter from './routes/mocks.router.js';
 import { errorHandler }  from './middlewares/errorHandler.js';
 import { addLogger } from './middlewares/addLogger.js';
 import { getLogger } from './utils/logger.js';
+import { swaggerUi, swaggerSpecs } from './docs/swaggerConfig.js';
 
 const app = express();
 const PORT = process.env.PORT||8080;
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(addLogger); 
 
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 app.use('/api/users',usersRouter);
 app.use('/api/pets',petsRouter);
 app.use('/api/adoptions',adoptionsRouter);
@@ -37,3 +39,5 @@ const logger = getLogger();
 app.listen(PORT, () => {
   logger.info(`✅ Servidor escuchando en puerto ${PORT}`);
 });
+
+export default app;

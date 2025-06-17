@@ -1,0 +1,50 @@
+tags:
+  - name: Pets
+    description: Gestión de mascotas disponibles para adopción
+
+paths:
+  /api/pets:
+    get:
+      summary: Obtener todas las mascotas
+      tags: [Pets]
+      responses:
+        200:
+          description: Lista de mascotas disponibles
+
+    post:
+      summary: Crear una nueva mascota
+      tags: [Pets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/NewPet'
+      responses:
+        201:
+          description: Mascota creada
+        400:
+          description: Error al crear la mascota
+
+components:
+  requestBodies:
+    NewPet:
+      type: object
+      properties:
+        name:
+          type: string
+        specie:
+          type: string
+        age:
+          type: number
+        adopted:
+          type: boolean
+      required:
+        - name
+        - specie
+        - age
+      example:
+        name: Coco
+        specie: Perro
+        age: 2
+        adopted: false
