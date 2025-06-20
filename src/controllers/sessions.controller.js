@@ -59,11 +59,28 @@ const unprotectedCurrent = async(req,res)=>{
     if(user)
         return res.send({status:"success",payload:user})
 }
+
+// ✅ NUEVA FUNCIÓN LOGOUT (requisito de Clase 13)
+const logout = async (req, res) => {
+    try {
+        const cookie = req.cookies['coderCookie'];
+        const user = jwt.verify(cookie, 'tokenSecretJWT');
+        if (user) {
+            await usersService.update(user.email, { last_connection: new Date() });
+            res.clearCookie('coderCookie').send({ status: 'success', message: 'Logout successful' });
+        } else {
+            res.status(401).send({ status: 'error', error: 'Not authenticated' });
+        }
+    } catch (error) {
+        res.status(500).send({ status: 'error', error: 'Logout failed' });
+    }
+}
+
 export default {
     current,
     login,
     register,
-    current,
+    logout,
     unprotectedLogin,
     unprotectedCurrent
 }

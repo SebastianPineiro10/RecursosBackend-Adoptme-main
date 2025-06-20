@@ -1,0 +1,121 @@
+paths:
+  /api/users:
+    get:
+      summary: Obtener todos los usuarios
+      tags:
+        - Users
+      responses:
+        "200":
+          description: Lista de usuarios obtenida con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+
+  /api/users/{uid}:
+    get:
+      summary: Obtener un usuario por ID
+      tags:
+        - Users
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: ID del usuario
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Usuario encontrado
+        "404":
+          description: Usuario no encontrado
+
+    put:
+      summary: Actualizar un usuario
+      tags:
+        - Users
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: ID del usuario a actualizar
+          schema:
+            type: string
+      requestBody:
+        description: Datos a actualizar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          description: Usuario actualizado
+        "404":
+          description: Usuario no encontrado
+
+    delete:
+      summary: Eliminar un usuario
+      tags:
+        - Users
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Usuario eliminado
+        "404":
+          description: Usuario no encontrado
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "64c9012be38d9b79b405f4"
+        first_name:
+          type: string
+          example: "Sebas"
+        last_name:
+          type: string
+          example: "Test"
+        email:
+          type: string
+          example: "sebas@test.com"
+        password:
+          type: string
+          example: "hashedpassword"
+        role:
+          type: string
+          example: "user"
+        pets:
+          type: array
+          items:
+            type: object
+        documents:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: "Identificación"
+              reference:
+                type: string
+                example: "/documents/identificacion.pdf"
+        last_connection:
+          type: string
+          format: date-time

@@ -1,11 +1,11 @@
-// src/test/users.test.js
 import request from 'supertest';
 import { expect } from 'chai';
-import app from '../app.js';
+
+const baseUrl = 'http://localhost:8080';
 
 describe('TESTING /api/users y /sessions', () => {
   it('GET /api/users debería devolver un array', async () => {
-    const res = await request(app).get('/api/users');
+    const res = await request(baseUrl).get('/api/users');
     expect(res.status).to.equal(200);
     expect(res.body.status).to.equal('success');
     expect(res.body.payload).to.be.an('array');
@@ -19,14 +19,14 @@ describe('TESTING /api/users y /sessions', () => {
       password: '123456'
     };
 
-    const res = await request(app).post('/api/sessions/register').send(newUser);
+    const res = await request(baseUrl).post('/api/sessions/register').send(newUser);
     expect(res.status).to.equal(200);
     expect(res.body.status).to.equal('success');
     expect(res.body.payload).to.be.a('string'); // ID del usuario
   });
 
   it('POST /api/sessions/register con datos incompletos debería fallar', async () => {
-    const res = await request(app).post('/api/sessions/register').send({});
+    const res = await request(baseUrl).post('/api/sessions/register').send({});
     expect(res.status).to.equal(400);
     expect(res.body.status).to.equal('error');
     expect(res.body).to.have.property('error');

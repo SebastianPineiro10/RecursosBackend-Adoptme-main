@@ -27,9 +27,47 @@ const deleteUser = async(req,res) =>{
     res.send({status:"success",message:"User deleted"})
 }
 
+// ✅ Nuevo método para subir documentos (Clase 13)
+const uploadDocuments = async (req, res) => {
+    const userId = req.params.uid;
+    const user = await usersService.getUserById(userId);
+    if (!user) return res.status(404).send({ status: "error", error: "User not found" });
+
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).send({ status: "error", error: "No files uploaded" });
+    }
+
+    const newDocuments = req.files.map(file => ({
+        name: file.originalname,
+        reference: `/documents/${file.filename}`
+    }));
+
+    const updatedUser = await usersService.update(userId, {
+        documents: [...user.documents, ...newDocuments]
+    });
+
+    res.send({ status: "success", message: "Documents uploaded successfully" });
+};
+
+// ✅ Eliminar usuarios inactivos (último requisito de Clase 13)
+const deleteInactiveUsers = async (req, res) => {
+    const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+    const inactiveUsers = await usersService.getInactiveSince(twoDaysAgo);
+
+    for (const user of inactiveUsers) {
+        // Si quieres eliminar sus archivos físicamente, puedes hacerlo aquí (opcional).
+        await usersService.delete(user._id);
+    }
+
+    res.send({ status: "success", message: `${inactiveUsers.length} inactive users deleted` });
+};
+
+
 export default {
     deleteUser,
     getAllUsers,
     getUser,
-    updateUser
+    updateUser,
+    uploadDocuments,
+    deleteInactiveUsers 
 }

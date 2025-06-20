@@ -22,4 +22,8 @@ export default class Users {
     delete = (id) =>{
         return userModel.findByIdAndDelete(id);
     }
+    // ✅ Nuevo método para obtener usuarios inactivos desde una fecha
+    getInactiveSince = async (date) => {
+        return userModel.find({ last_connection: { $lt: date } });
+    }
 }
