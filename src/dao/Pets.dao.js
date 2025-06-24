@@ -3,7 +3,6 @@ import petModel from "./models/Pet.js";
 export default class Pet {
 
     get = (params) =>{
-        throw new Error("error de prueba");
         return petModel.find(params)
     }
 

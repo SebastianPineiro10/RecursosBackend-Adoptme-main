@@ -21,14 +21,18 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(addLogger);
 
+// Documentación Swagger
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+
+// Rutas de API
 app.use('/api/users', usersRouter);
 app.use('/api/pets', petsRouter);
 app.use('/api/adoptions', adoptionsRouter);
 app.use('/api/sessions', sessionsRouter);
-app.use('/loggerTest', loggerRouter);
+app.use('/loggerTest', loggerRouter); 
 app.use('/api/mocks', mocksRouter);
 
+// Middleware de errores
 app.use(errorHandler);
 
 export default app;
