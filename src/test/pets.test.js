@@ -1,11 +1,23 @@
+import mongoose from 'mongoose';
 import request from 'supertest';
 import { expect } from 'chai';
+import app from '../app.js';
+import dotenv from 'dotenv';
 
-const baseUrl = 'http://localhost:8080';
+dotenv.config();
+const MONGO_URL = process.env.MONGO_URL;
 
 describe('TESTING /api/pets', () => {
+  before(async () => {
+    await mongoose.connect(MONGO_URL);
+  });
+
+  after(async () => {
+    await mongoose.connection.close();
+  });
+
   it('GET /api/pets debería devolver un array', async () => {
-    const res = await request(baseUrl).get('/api/pets');
+    const res = await request(app).get('/api/pets');
     expect(res.status).to.be.oneOf([200, 500]);
     if (res.status === 200) {
       expect(res.body.payload).to.be.an('array');
@@ -20,14 +32,14 @@ describe('TESTING /api/pets', () => {
       adopted: false
     };
 
-    const res = await request(baseUrl).post('/api/pets').send(newPet);
+    const res = await request(app).post('/api/pets').send(newPet);
     expect(res.status).to.be.oneOf([200, 201]);
     expect(res.body.payload).to.have.property('_id');
     expect(res.body.payload.name).to.equal(newPet.name);
   });
 
   it('POST /api/pets con datos vacíos debería fallar', async () => {
-    const res = await request(baseUrl).post('/api/pets').send({});
+    const res = await request(app).post('/api/pets').send({});
     expect(res.status).to.be.oneOf([400, 422]);
     expect(res.body).to.have.property('status').that.equals('error');
   });
