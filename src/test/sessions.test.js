@@ -46,7 +46,7 @@ describe('🧪 TESTING /api/sessions', () => {
 
     expect(res.status).to.equal(200);
     expect(res.body.status).to.equal('success');
-    expect(res.body.message).to.equal('Logged in'); // 👈 Adaptado a tu backend
+    expect(res.body.message).to.equal('Logged in'); 
   });
 
   it('POST /api/sessions/login con datos incorrectos debe fallar', async () => {
@@ -54,7 +54,7 @@ describe('🧪 TESTING /api/sessions', () => {
       email: 'correo@inexistente.com',
       password: 'invalida'
     });
-    expect(res.status).to.equal(404); // tu backend devuelve 404
+    expect(res.status).to.equal(404);
     expect(res.body.status).to.equal('error');
   });
 });
